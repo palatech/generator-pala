@@ -1,10 +1,9 @@
 {
   "name": "<%= moduleName %>",
-  "version": "0.0.0-semantically-released",
+  "version": "0.1.0",
   "description": "<%= description %>",
-  "main": "dist/index.js",
   "keywords": [],
-  "author": "Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)",
+  "author": "James Pyne <james@pala.london> (https://kentcdodds.com)",
   "license": "MIT",
   "engines": {
     "node": ">=10",
@@ -12,35 +11,37 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kentcdodds/<%= moduleName %>"
+    "url": "https://github.com/palatech/<%= moduleName %>"
   },
   "bugs": {
-    "url": "https://github.com/kentcdodds/<%= moduleName %>/issues"
+    "url": "https://github.com/palatech/<%= moduleName %>/issues"
   },
-  "homepage": "https://github.com/kentcdodds/<%= moduleName %>#readme",
-  "files": [
-    "dist"
-  ],
+  "homepage": "https://github.com/palatech/<%= moduleName %>#readme",
   "scripts": {
-    "build": "kcd-scripts build",
-    "lint": "kcd-scripts lint",
-    "setup": "npm install && npm run validate -s",
-    "test": "kcd-scripts test",
-    "test:update": "npm test -- --updateSnapshot --coverage",
-    "validate": "kcd-scripts validate"
   },
   "dependencies": {
-    "@babel/runtime": "^7.9.6"
   },
   "devDependencies": {
-    "kcd-scripts": "^6.0.0"
+    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/parser": "^2.6.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-blvd": "^1.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-react-app": "^5.0.2",
+    "eslint-plugin-flowtype": "^4.5.2",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^9.4.3",
+    "prettier": "^1.19.1"
   },
-  "eslintConfig": {
-    "extends": "./node_modules/kcd-scripts/eslint.js"
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }

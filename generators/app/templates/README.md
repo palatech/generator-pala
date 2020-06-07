@@ -84,19 +84,6 @@ a 👍. This helps maintainers prioritize what to work on.
 
 [**See Feature Requests**][requests]
 
-## Contributors ✨
-
-Thanks goes to these people ([emoji key][emojis]):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/kentcdodds/<%= moduleName %>/commits?author=kentcdodds" title="Code">💻</a> <a href="https://github.com/kentcdodds/<%= moduleName %>/commits?author=kentcdodds" title="Documentation">📖</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/kentcdodds/<%= moduleName %>/commits?author=kentcdodds" title="Tests">⚠️</a></td>
-  </tr>
-</table>
-
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 

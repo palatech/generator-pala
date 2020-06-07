@@ -1,29 +1,15 @@
 {
-  "name": "generator-kcd-oss",
-  "version": "0.0.0-semantically-released",
-  "description": "A generator for my projects. Feel free to contribute if you want to adapt it for more use cases",
+  "name": "generator-pala",
+  "version": "0.1.0",
+  "description": "Pala generator for JS projects.",
   "keywords": [
-    "open source",
-    "kentcdodds",
     "yeoman-generator"
   ],
-  "author": "Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)",
+  "author": "James Pyne <james@pala.london>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kentcdodds/generator-kcd-oss"
-  },
-  "bugs": {
-    "url": "https://github.com/kentcdodds/generator-kcd-oss/issues"
-  },
-  "homepage": "https://github.com/kentcdodds/generator-kcd-oss#readme",
-  "files": [
-    "generators"
-  ],
-  "scripts": {
-    "lint": "kcd-scripts lint",
-    "setup": "npm install && npm run validate -s",
-    "validate": "kcd-scripts validate"
+    "url": "https://github.com/jpyne17/generator-kcd-oss"
   },
   "dependencies": {
     "lodash.kebabcase": "^4.1.1",
@@ -33,14 +19,6 @@
   "devDependencies": {
     "kcd-scripts": "^6.0.0"
   },
-  "eslintConfig": {
-    "extends": "./node_modules/kcd-scripts/eslint.js"
-  },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ],
   "engines": {
     "node": ">=10",
     "npm": ">=6"
