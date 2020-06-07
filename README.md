@@ -11,4 +11,9 @@ project.
 
 ## This solution
 
-This is a yeoman generator for my open source projects
+This is a yeoman generator for Pala client projects.
+
+## Inspiration
+We used [@kentcdodds][Kent C. Dodds]' [module][generator-ocd-kss] heavily,
+the king of JS OSS and tutorials. That in turn [@sindresorhus][sindresorhus]'s
+[module][generator-nm].
