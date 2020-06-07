@@ -14,6 +14,13 @@ project.
 This is a yeoman generator for Pala client projects.
 
 ## Inspiration
-We used [@kentcdodds][Kent C. Dodds]' [module][generator-ocd-kss] heavily,
+We used [@kentcdodds][] [module][generator-ocd-kss] heavily,
 the king of JS OSS and tutorials. That in turn [@sindresorhus][sindresorhus]'s
 [module][generator-nm].
+
+<!-- prettier-ignore-start -->
+[sindresorhus]: https://github.com/sindresorhus
+[generator-nm]: https://github.com/sindresorhus/generator-nm
+[kentcdodds]: https://github.com/kentcdodds
+[generator-kcd]: https://github.com/kentcdodds/generator-kcd
+<!-- prettier-ignore-end -->
