@@ -11,12 +11,6 @@ module.exports = class extends Generator {
         filter: x => kebabCase(x).toLowerCase(),
       },
       {
-        name: 'devDep',
-        message: 'Should people install this as one of their devDependencies?',
-        default: true,
-        type: 'confirm',
-      },
-      {
         name: 'description',
         message: `What's the project description?`,
         type: 'input',
