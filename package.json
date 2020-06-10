@@ -1,6 +1,6 @@
 {
   "name": "generator-pala",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pala generator for JS projects.",
   "keywords": [
     "yeoman-generator"
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jpyne17/generator-kcd-oss"
+    "url": "https://github.com/palatech/generator-pala"
   },
   "dependencies": {
     "lodash.kebabcase": "^4.1.1",
