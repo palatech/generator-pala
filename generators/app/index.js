@@ -21,8 +21,18 @@ module.exports = class extends Generator {
         name: "typescript",
         message: "Does this project use TypeScript?",
         type: "confirm"
+      },
+      {
+        name: 'packageManager',
+        message: "Which package manager do you want for installation?",
+        type: "list",
+        choices: ["npm", "yarn", "No installation please"]
       }
     ]).then(props => {
+
+      // Bank the answers.
+      this.answers = props;
+
       const mv = (from, to) => {
         this.fs.move(this.destinationPath(from), this.destinationPath(to))
       }
@@ -59,6 +69,11 @@ module.exports = class extends Generator {
   }
   install() {
     this.spawnCommand('git', ['init'])
-    this.npmInstall()
+    if (this.answers.packageManager === "npm") {
+      this.npmInstall()
+    }
+    else if (this.answers.packageManager === "yarn") {
+      this.yarnInstall()
+    }
   }
 }
