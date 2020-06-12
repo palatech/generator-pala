@@ -1,3 +1,5 @@
+const path = require('path')
+const mkdirp = require('mkdirp')
 const Generator = require('yeoman-generator')
 const kebabCase = require('lodash.kebabcase')
 
@@ -15,13 +17,19 @@ module.exports = class extends Generator {
         message: `What's the project description?`,
         type: 'input',
       },
+      {
+        name: "typescript",
+        message: "Does this project use TypeScript?",
+        type: "confirm"
+      }
     ]).then(props => {
       const mv = (from, to) => {
         this.fs.move(this.destinationPath(from), this.destinationPath(to))
       }
+      console.log(this.templatePath())
 
       this.fs.copyTpl(
-        [`${this.templatePath()}/**`],
+        [`${this.templatePath()}/**`, `!${this.templatePath()}/**/_tsconfig.json`],
         this.destinationPath(),
         props,
       )
@@ -35,8 +43,18 @@ module.exports = class extends Generator {
       mv('lintstagedrc', '.lintstagedrc')
       mv('eslint.js', '.eslintrc.js')
       mv('eslintignore', '.eslintignore')
-      mv('github/ISSUE_TEMPLATE.md', '.github/ISSUE_TEMPLATE.md')
-      mv('github/PULL_REQUEST_TEMPLATE.md', '.github/PULL_REQUEST_TEMPLATE.md')
+
+      if (props.typescript) {
+        mkdirp(path.join(this.destinationPath("local_types")))
+        this.fs.copyTpl(
+          [`${this.templatePath()}/**/_tsconfig.json`],
+          this.destinationPath(),
+          props,
+        )
+        mv('_tsconfig.json', 'tsconfig.json')
+      }
+
+
     })
   }
   install() {

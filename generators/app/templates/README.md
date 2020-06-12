@@ -30,7 +30,7 @@
 
 ## LICENSE
 
-Copyright (C) Pala Consultants Ltd - All Rights Reserved  
+Copyright (C) Pala Consultants Ltd - All Rights Reserved.  
 Unauthorized copying of this file via any medium is strictly prohibited.  
 Proprietary and confidential.
 
