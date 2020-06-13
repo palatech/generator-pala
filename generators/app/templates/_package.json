@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "<%= description %>",
   "keywords": [],
-  "author": "James Pyne <james@pala.london> (https://kentcdodds.com)",
+  "author": "James Pyne <james@pala.london>",
   "license": "MIT",
   "engines": {
     "node": ">=10",

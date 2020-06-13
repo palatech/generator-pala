@@ -53,7 +53,7 @@ module.exports = class extends Generator {
       mv('lintstagedrc', '.lintstagedrc')
       mv('eslint.js', '.eslintrc.js')
       mv('eslintignore', '.eslintignore')
-      mv('.husky', '.huskyrc')
+      mv('huskyrc', '.huskyrc')
 
       if (props.typescript) {
         mkdirp(path.join(this.destinationPath("local_types")))
