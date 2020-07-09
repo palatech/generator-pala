@@ -21,7 +21,6 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'import/order': 'warn',
     '@typescript-eslint/no-empty-interface': 'off',
-    '@typescript-eslint/ban-ts-ignore': 'warn',
     'max-len': ['error', { code: 140, ignoreUrls: true }],
     'import/prefer-default-export': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
