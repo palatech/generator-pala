@@ -112,6 +112,9 @@ module.exports = class extends Generator {
       if (!cliInstalled) {
         mv("_package.json", "package.json");
       }
+      else {
+        this.fs.delete(this.destinationPath("_package.json"))
+      }
 
       mv("gitattributes", ".gitattributes");
       mv("gitignore", ".gitignore");
