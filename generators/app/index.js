@@ -4,7 +4,8 @@ const Generator = require("yeoman-generator");
 const kebabCase = require("lodash.kebabcase");
 
 const STAGING_DEPS = ["husky", "lint-staged"];
-const FORMATTING_DEPS = ["eslint", "prettier"];
+const LINTING_DEPS = ["eslint"];
+const FORMATTING_DEPS = ["prettier"];
 const ESLINT_TS_DEPS = [
   "@typescript-eslint/eslint-plugin",
   "@typescript-eslint/parser",
