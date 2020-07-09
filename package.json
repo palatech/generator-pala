@@ -1,6 +1,6 @@
 {
   "name": "generator-pala",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Pala generator for JS projects.",
   "keywords": [
     "yeoman-generator"
