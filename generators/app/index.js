@@ -122,10 +122,8 @@ module.exports = class extends Generator {
       mv("npmrc", ".npmrc");
       mv("prettierrc", ".prettierrc");
       mv("prettierignore", ".prettierignore");
-      mv("lintstagedrc", ".lintstagedrc");
       mv("eslint.js", ".eslintrc.js");
       mv("eslintignore", ".eslintignore");
-      mv("huskyrc", ".huskyrc");
 
       if (props.typescript && props.projectTemplate !== "create-react-app") {
         mkdirp(path.join(this.destinationPath("local_types")));
