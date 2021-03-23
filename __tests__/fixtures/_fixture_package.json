@@ -1,0 +1,13 @@
+{
+  "name": "fixture-generator-pala",
+  "version": "1.0.0",
+  "description": "Foobar",
+  "author": "James Pyne <james@pala.london>",
+  "license": "MIT",
+  "dependencies": {
+    "cowsay": "^1.4.0"
+  },
+  "devDependencies": {
+    "left-pad": "^1.3.0"
+  }
+}
