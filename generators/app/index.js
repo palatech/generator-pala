@@ -1,45 +1,11 @@
 const path = require("path");
 const mkdirp = require("mkdirp");
 const Generator = require("yeoman-generator");
-const kebabCase = require("lodash.kebabcase");
-
-const STAGING_DEPS = ["husky", "lint-staged"];
-const LINTING_DEPS = ["eslint"];
-const FORMATTING_DEPS = ["prettier"];
-const ESLINT_TS_DEPS = [
-  "@typescript-eslint/eslint-plugin",
-  "@typescript-eslint/parser",
-];
-const ESLINT_REACT_DEPS = [
-  "eslint-config-airbnb",
-  "eslint-config-blvd",
-  "eslint-config-prettier",
-  "eslint-config-react-app",
-  "eslint-plugin-flowtype",
-  "eslint-plugin-import",
-  "eslint-plugin-jsx-a11y",
-  "eslint-plugin-prettier",
-  "eslint-plugin-react",
-  "eslint-plugin-react-hooks",
-];
-
-const PRETTIER_STANDARD_DEVDEPS = {
-  prettier: "^2.2.1",
-};
-
-const ESLINT_STANDARD_DEVDEPS = {
-  eslint: "^7.22.0",
-  "eslint-config-kentcdodds": "^17.5.0",
-  "babel-plugin-module-resolver": "^4.1.0",
-  "eslint-plugin-import": "^2.2.1",
-  "eslint-import-resolver-babel-module": "^5.2.0",
-  "eslint-plugin-react": "^7.23.0",
-};
-
-const HUSKY_LINTSTAGED_STANDARD_DEVDEPS = {
-  husky: "^5.2.0",
-  "lint-staged": "^10.5.4",
-};
+const {
+  PRETTIER_STANDARD_DEVDEPS,
+  ESLINT_STANDARD_DEVDEPS,
+  HUSKY_LINTSTAGED_STANDARD_DEVDEPS,
+} = require("./dependencies");
 
 function getPrettierDevDeps(framework) {
   return PRETTIER_STANDARD_DEVDEPS;
@@ -106,6 +72,11 @@ module.exports = class extends Generator {
         this.answers
       );
     }
+
+    // Decant the dependencies into the package.json
+    this.fs.extendJSON(`${this.destinationPath()}/package.json`, {
+      devDependencies: newDevDependencies,
+    });
   }
 
   install() {
