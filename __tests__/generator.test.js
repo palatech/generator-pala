@@ -12,7 +12,7 @@ const DEFAULT_PROMPTS = {
   framework: "none",
   tooling: [],
   installer: "No thanks",
-  nodeVersion: 14
+  nodeVersion: 14,
 };
 
 beforeEach(() => {
@@ -38,7 +38,7 @@ describe("Generator: general", () => {
       .run(path.join(__dirname, "..", "generators", "app"))
       // @TODO: NOTES/ `inDir` cleans the directory. Use cd.
       .cd(TMP_DIR)
-      .withPrompts({...DEFAULT_PROMPTS});
+      .withPrompts({ ...DEFAULT_PROMPTS });
     // @TODO: NOTES/ Jest array equality requires order to be same.
     const dirContents = await fs.readdir(TMP_DIR);
     expect(dirContents).toEqual(["package.json"]);
@@ -50,10 +50,40 @@ describe("Generator: ESLint", () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
-      .withPrompts({...DEFAULT_PROMPTS, tooling: ['eslint']});
+      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] });
     const dirContents = await fs.readdir(TMP_DIR);
     expect(_.sortBy(dirContents)).toEqual(
       _.sortBy(["package.json", ".eslintrc"])
     );
+  });
+
+  it("should overwrite existing ESLint file with --force", async () => {
+    fs.writeFileSync(path.join(TMP_DIR, ".eslintrc"), "{}");
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
+      .withOptions({ force: true });
+    const esLintContents = fs.readJsonSync(path.join(TMP_DIR, ".eslintrc"));
+    expect(Object.keys(esLintContents).length).toBeTruthy();
+  });
+
+  it("should only extend the kentcdodds setup as the default", async () => {
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] });
+    const esLintContents = fs.readJsonSync(path.join(TMP_DIR, ".eslintrc"));
+    expect(Object.keys(esLintContents)).toEqual(["extends"]);
+    expect(esLintContents.extends).toEqual(["kentcdodds"]);
+  });
+
+  it("should extend kentcdodds/react for the gatsby framework", async () => {
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"], framework: "gatsby" });
+    const esLintContents = fs.readJsonSync(path.join(TMP_DIR, ".eslintrc"));
+    expect(esLintContents.extends).toEqual(["kentcdodds", "kentcdodds/react"]);
   });
 });

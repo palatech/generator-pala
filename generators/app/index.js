@@ -64,9 +64,9 @@ module.exports = class extends Generator {
       },
       {
         name: "framework",
-        message: "Which project template would you like to use?",
+        message: "Which framework are you using?",
         type: "list",
-        choices: ["gatsby"],
+        choices: ["none", "gatsby"],
       },
       {
         name: "tooling",
