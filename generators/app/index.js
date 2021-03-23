@@ -23,25 +23,39 @@ const ESLINT_REACT_DEPS = [
   "eslint-plugin-react-hooks",
 ];
 
+const PRETTIER_STANDARD_DEVDEPS = {
+  prettier: "^2.2.1",
+};
+
+const ESLINT_STANDARD_DEVDEPS = {
+  eslint: "^7.22.0",
+  "eslint-config-kentcdodds": "^17.5.0",
+  "babel-plugin-module-resolver": "^4.1.0",
+  "eslint-plugin-import": "^2.2.1",
+  "eslint-import-resolver-babel-module": "^5.2.0",
+  "eslint-plugin-react": "^7.23.0",
+};
+
+const HUSKY_LINTSTAGED_STANDARD_DEVDEPS = {
+  husky: "^5.2.0",
+  "lint-staged": "^10.5.4",
+};
+
+function getPrettierDevDeps(framework) {
+  return PRETTIER_STANDARD_DEVDEPS;
+}
+
+function getEslintDevDeps(framework) {
+  return ESLINT_STANDARD_DEVDEPS;
+}
+
 module.exports = class extends Generator {
-  init() {
-    return this.prompt([
+  async prompting() {
+    const answers = await this.prompt([
       {
         name: "moduleName",
         message: "What do you want to name your module?",
         default: this.appname.replace(/\s/g, "-"),
-        filter: (x) => kebabCase(x).toLowerCase(),
-      },
-      {
-        name: "description",
-        message: `What's the project description?`,
-        type: "input",
-      },
-      {
-        name: "projectTemplate",
-        message: "Which project template would you like to use?",
-        type: "list",
-        choices: ["minimal", "create-react-app", "gatsby", "expo"],
       },
       {
         name: "typescript",
@@ -49,95 +63,52 @@ module.exports = class extends Generator {
         type: "confirm",
       },
       {
-        name: "packageManager",
+        name: "framework",
+        message: "Which project template would you like to use?",
+        type: "list",
+        choices: ["gatsby"],
+      },
+      {
+        name: "tooling",
+        message: "Which tooling would you like to use?",
+        type: "checkbox",
+        choices: ["eslint"],
+      },
+      {
+        name: "nodeVersion",
+        message: "Which node version are you using?",
+        type: "list",
+        choices: [14, 12, 10],
+      },
+      {
+        name: "installer",
         message: "Which package manager do you want for installation?",
         type: "list",
-        choices: ["npm", "yarn", "No installation please"],
+        choices: ["npm", "yarn", "No thanks"],
       },
-    ]).then((props) => {
-      // Bank the answers.
-      this.answers = props;
-
-      let cliInstalled = false;
-
-      const cliInstaller = (projectType) => {
-        if (projectType === "create-react-app") {
-          this.spawnCommandSync("npx", [
-            "create-react-app",
-            ...(props.typescript ? ["--template", "typescript"] : []),
-            ...(props.packageManager === "npm" ? ["--usenpm"] : []),
-            ".",
-          ]);
-          this.spawnCommandSync("rm", [".gitignore", "README.md"])
-          if (props.packageManager === "npm") {
-            this.spawnCommandSync("npm", [
-              "i",
-              "--save-dev",
-              ...ESLINT_REACT_DEPS,
-              ...STAGING_DEPS,
-              ...FORMATTING_DEPS,
-              ...(props.typescript ? ESLINT_TS_DEPS : []),
-            ]);
-          } else if (props.packageManager === "yarn") {
-            this.spawnCommandSync("yarn", [
-              "add",
-              "--dev",
-              ...ESLINT_REACT_DEPS,
-              ...STAGING_DEPS,
-              ...FORMATTING_DEPS,
-              ...(props.typescript ? ESLINT_TS_DEPS : []),
-            ]);
-          }
-          cliInstalled = true;
-        }
-      };
-
-      // Do any CLI installing if required.
-      cliInstaller(props.projectTemplate);
-
-      const mv = (from, to) => {
-        this.fs.move(this.destinationPath(from), this.destinationPath(to));
-      };
-      console.log(this.templatePath());
-
-      this.fs.copyTpl(
-        [
-          `${this.templatePath()}/**`,
-          `!${this.templatePath()}/**/_tsconfig.json`,
-        ],
-        this.destinationPath(),
-        props
-      );
-
-
-      if (!cliInstalled) {
-        mv("_package.json", "package.json");
-      }
-      else {
-        this.fs.delete(this.destinationPath("_package.json"))
-      }
-
-      mv("gitattributes", ".gitattributes");
-      mv("gitignore", ".gitignore");
-      mv("npmrc", ".npmrc");
-      mv("prettierrc", ".prettierrc");
-      mv("prettierignore", ".prettierignore");
-      mv("eslint.js", ".eslintrc.js");
-      mv("eslintignore", ".eslintignore");
-
-      if (props.typescript && props.projectTemplate !== "create-react-app") {
-        mkdirp(path.join(this.destinationPath("local_types")));
-        this.fs.copyTpl(
-          [`${this.templatePath()}/**/_tsconfig.json`],
-          this.destinationPath(),
-          props
-        );
-        mv("_tsconfig.json", "tsconfig.json");
-      }
-    });
+    ]);
+    this.answers = answers;
   }
+
+  writing() {
+    const { typescript, framework, tooling } = this.answers;
+
+    let newDevDependencies = {};
+
+    if (this.answers.tooling.includes("eslint")) {
+      newDevDependencies = {
+        ...newDevDependencies,
+        ...getEslintDevDeps(framework),
+      };
+      this.fs.copyTpl(
+        `${this.templatePath()}/eslintrc.ejs`,
+        `${this.destinationPath()}/.eslintrc`,
+        this.answers
+      );
+    }
+  }
+
   install() {
-    this.spawnCommand("git", ["init"]);
     if (this.answers.packageManager === "npm") {
       this.npmInstall();
     } else if (this.answers.packageManager === "yarn") {
