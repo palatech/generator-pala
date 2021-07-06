@@ -1,3 +1,36 @@
-{
-  "extends": ["kentcdodds"<% if (framework === "gatsby") { %>,"kentcdodds/react"<% } %>]
-}
+module.exports = {
+// Don't need to also extend "prettier/react" as of `eslint-config-prettier` v8.
+extends: ['eslint-config-airbnb-typescript<% if (!react) { %>/base<% } %>'<% if (tooling.includes("prettier")) { %>, 'prettier'<% } %>],
+parserOptions: {
+// Need to point the AirbnbTS ESLint config to the tsconfig.
+project: './tsconfig.json',
+},
+rules: {
+// Next.js makes a React import unnecessary.
+'react/react-in-jsx-scope': 'off',
+// Allow prop spreading in React.
+'react/jsx-props-no-spreading': 'off',
+// PropTypes off.
+'react/prop-types': 'off',
+// Named exports are fine.
+'import/prefer-default-export': 'off',
+// Nested ternaries shouldn't be forbidden.
+'no-nested-ternary': 'warn',
+// TSC should protect against consistent returns.
+'consistent-return': 'warn',
+// Standard TS rules.
+'@typescript-eslint/no-empty-function': 'off',
+'@typescript-eslint/no-empty-interface': 'warn',
+'@typescript-eslint/prefer-interface': 'off',
+'@typescript-eslint/ban-ts-comment': 'off',
+'@typescript-eslint/camelcase': 'off',
+},
+"settings": {
+"react": {
+"version": "detect"
+},
+"import/resolver": {
+"babel-module": {}
+},
+},
+};

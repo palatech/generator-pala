@@ -4,7 +4,7 @@ const Generator = require("yeoman-generator");
 const {
   PRETTIER_STANDARD_DEVDEPS,
   ESLINT_STANDARD_DEVDEPS,
-  HUSKY_LINTSTAGED_STANDARD_DEVDEPS,
+  LINTSTAGED_STANDARD_DEVDEPS,
 } = require("./dependencies");
 
 function getPrettierDevDeps(framework) {
@@ -17,15 +17,15 @@ function getEslintDevDeps(framework) {
 
 module.exports = class extends Generator {
   async prompting() {
-    const answers = await this.prompt([
+    this.answers = await this.prompt([
       {
         name: "moduleName",
         message: "What do you want to name your module?",
         default: this.appname.replace(/\s/g, "-"),
       },
       {
-        name: "typescript",
-        message: "Does this project use TypeScript?",
+        name: "react",
+        message: "Does this project use React?",
         type: "confirm",
       },
       {
@@ -38,13 +38,7 @@ module.exports = class extends Generator {
         name: "tooling",
         message: "Which tooling would you like to use?",
         type: "checkbox",
-        choices: ["eslint"],
-      },
-      {
-        name: "nodeVersion",
-        message: "Which node version are you using?",
-        type: "list",
-        choices: [14, 12, 10],
+        choices: ["eslint", "prettier", "lint-staged", "nvmrc", "svgr"],
       },
       {
         name: "installer",
@@ -53,30 +47,75 @@ module.exports = class extends Generator {
         choices: ["npm", "yarn", "No thanks"],
       },
     ]);
-    this.answers = answers;
   }
 
   writing() {
-    const { typescript, framework, tooling } = this.answers;
+    const {framework, tooling} = this.answers;
 
     let newDevDependencies = {};
 
-    if (this.answers.tooling.includes("eslint")) {
+    if (tooling.includes("eslint")) {
       newDevDependencies = {
         ...newDevDependencies,
         ...getEslintDevDeps(framework),
       };
       this.fs.copyTpl(
         `${this.templatePath()}/eslintrc.ejs`,
-        `${this.destinationPath()}/.eslintrc`,
+        `${this.destinationPath()}/.eslintrc.js`,
         this.answers
       );
+    }
+
+    if (tooling.includes("prettier")) {
+      newDevDependencies = {
+        ...newDevDependencies,
+        ...getPrettierDevDeps(framework),
+      };
+      this.fs.copyTpl(
+        `${this.templatePath()}/prettierrc`,
+        `${this.destinationPath()}/.prettierrc`,
+        this.answers
+      );
+    }
+
+    if (tooling.includes("lint-staged")) {
+      newDevDependencies = {
+        ...newDevDependencies,
+        ...LINTSTAGED_STANDARD_DEVDEPS,
+      };
+      this.fs.copyTpl(
+        `${this.templatePath()}/eslintrc.ejs`,
+        `${this.destinationPath()}/.eslintrc.js`,
+        this.answers
+      );
+      this.fs.extendJSON(`${this.destinationPath()}/package.json`, {
+        "simple-git-hooks": {
+          "pre-commit": "npx lint-staged",
+        },
+        "lint-staged": {
+          ...tooling.includes("eslint") ? {
+            "*.+(js|jsx|ts|tsx)":
+              [
+                "eslint"
+              ]
+          } : {},
+          ...tooling.includes("eslint") ? {
+            "*.+(js|jsx|json|yml|yaml|less|scss|ts|tsx|md|graphql|mdx)": [
+              "prettier --write"
+            ]
+          } : {}
+        },
+      });
     }
 
     // Decant the dependencies into the package.json
     this.fs.extendJSON(`${this.destinationPath()}/package.json`, {
       devDependencies: newDevDependencies,
     });
+
+    if (tooling.includes("nvmrc")) {
+      this.fs.write(`${this.destinationPath()}/.nvmrc`, `${process.version.split('.')[0].slice(1)}\n`)
+    }
   }
 
   install() {

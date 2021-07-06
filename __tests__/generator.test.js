@@ -3,14 +3,15 @@ const fs = require("fs-extra");
 const helpers = require("yeoman-test");
 const assert = require("yeoman-assert");
 const _ = require("lodash");
+const readline = require("readline");
 import { ESLINT_STANDARD_DEVDEPS } from "../generators/app/dependencies";
 
 const TMP_DIR = path.join(__dirname, "tmp");
 
 const DEFAULT_PROMPTS = {
   moduleName: "Project",
-  typescript: false,
   framework: "none",
+  react: false,
   tooling: [],
   installer: "No thanks",
   nodeVersion: 14,
@@ -36,9 +37,12 @@ describe("Generator: general", () => {
 
   it("should run as a no-op with no tooling selected", async () => {
     await helpers
+      // Run in the generator directory to create context.
       .run(path.join(__dirname, "..", "generators", "app"))
-      // @TODO: NOTES/ `inDir` cleans the directory. Use cd.
+      // @TODO: NOTES/ `inDir` auto cleans the directory. Use cd.
+      // Change into where we want to run the generator.
       .cd(TMP_DIR)
+      // Specify responses to the prompts.
       .withPrompts({ ...DEFAULT_PROMPTS })
       .withOptions({ force: true });
     // @TODO: NOTES/ Jest array equality requires order to be same.
@@ -56,7 +60,7 @@ describe("Generator: ESLint", () => {
       .withOptions({ force: true });
     const dirContents = await fs.readdir(TMP_DIR);
     expect(_.sortBy(dirContents)).toEqual(
-      _.sortBy(["package.json", ".eslintrc"])
+      _.sortBy(["package.json", ".eslintrc.js"])
     );
   });
 
@@ -67,33 +71,21 @@ describe("Generator: ESLint", () => {
       .cd(TMP_DIR)
       .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
       .withOptions({ force: true });
-    const esLintContents = fs.readJsonSync(path.join(TMP_DIR, ".eslintrc"));
+    const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
     expect(Object.keys(esLintContents).length).toBeTruthy();
   });
 
-  it("should only extend the kentcdodds setup as the default", async () => {
+  it("should only extend the eslint-config-airbnb-typescript/base setup as the default", async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
       .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
       .withOptions({ force: true });
-    const esLintContents = fs.readJsonSync(path.join(TMP_DIR, ".eslintrc"));
-    expect(Object.keys(esLintContents)).toEqual(["extends"]);
-    expect(esLintContents.extends).toEqual(["kentcdodds"]);
-  });
-
-  it("should extend kentcdodds/react for the gatsby framework", async () => {
-    await helpers
-      .run(path.join(__dirname, "..", "generators", "app"))
-      .cd(TMP_DIR)
-      .withPrompts({
-        ...DEFAULT_PROMPTS,
-        tooling: ["eslint"],
-        framework: "gatsby",
-      })
-      .withOptions({ force: true });
-    const esLintContents = fs.readJsonSync(path.join(TMP_DIR, ".eslintrc"));
-    expect(esLintContents.extends).toEqual(["kentcdodds", "kentcdodds/react"]);
+    const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
+    expect(Object.keys(esLintContents)).toContain("extends");
+    expect(esLintContents.extends).toEqual([
+      "eslint-config-airbnb-typescript/base",
+    ]);
   });
 
   it("should add the standard ESLint devDependencies as default", async () => {
@@ -112,5 +104,30 @@ describe("Generator: ESLint", () => {
       ...ESLINT_STANDARD_DEVDEPS,
       "left-pad": "^1.3.0",
     });
+  });
+});
+
+describe("Generator: misc.", () => {
+  it("should write an .nvmrc file with appropriate node version", async () => {
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({
+        ...DEFAULT_PROMPTS,
+        tooling: ["nvmrc"]
+      })
+      .withOptions({ force: true });
+    const fileStream = fs.createReadStream(path.join(TMP_DIR, ".nvmrc"), {encoding: "utf-8"});
+    const rl = readline.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity
+    });
+    let line1;
+    for await (const line of rl) {
+      line1 = line;
+      break
+    }
+    expect(parseInt(line1)).toBeLessThan(20)
+    expect(parseInt(line1)).toBeGreaterThanOrEqual(10)
   });
 });
