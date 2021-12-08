@@ -1,21 +1,26 @@
 exports.PRETTIER_STANDARD_DEVDEPS = {
-  prettier: "^2.2.1",
+  prettier: "^2",
 };
 
 exports.ESLINT_STANDARD_DEVDEPS = {
-  eslint: "^7.30.0",
-  "babel-plugin-module-resolver": "^4.1.0",
-  "eslint-config-airbnb-typescript": "^12.3.1",
-  "eslint-config-prettier": "^8.2.0",
-  "eslint-import-resolver-babel-module": "^5.2.0",
-  "eslint-plugin-import": "^2.22.0",
-  "eslint-plugin-jsx-a11y": "^6.3.1",
-  "eslint-plugin-prettier": "^3.3.1",
-  "eslint-plugin-react": "^7.20.3",
-  "eslint-plugin-react-hooks": "^4.0.8",
+  eslint: "^8",
+  "eslint-config-airbnb-typescript": "^16",
+  "eslint-config-prettier": "^8",
+  "eslint-import-resolver-babel-module": "^5",
+  "eslint-plugin-import": "^2",
+  "eslint-plugin-jsx-a11y": "^6",
+  "eslint-plugin-prettier": "^3",
+  "eslint-plugin-react": "^7",
+  "eslint-plugin-react-hooks": "^4",
+  "@typescript-eslint/parser": "^5",
+  "@typescript-eslint/eslint-plugin": "^5"
 };
 
 exports.LINTSTAGED_STANDARD_DEVDEPS = {
-  "simple-git-hooks": "^2.5.1",
-  "lint-staged": "^11.0.0",
+  "simple-git-hooks": "^2",
+  "lint-staged": "^12",
 };
+
+exports.GRAPHQL_CODEGEN_STANDARD_DEVDEPS = {
+
+}

@@ -19,16 +19,15 @@
   "scripts": {},
   "dependencies": {},
   "devDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "simple-git-hooks": {
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.+(js|jsx|ts|tsx)": ["eslint"],
+    "*.+(js|jsx|ts|tsx)": [
+      "eslint"
+    ],
     "*.+(js|jsx|json|yml|yaml|less|scss|ts|tsx|md|graphql|mdx)": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   }
 }

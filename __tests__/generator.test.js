@@ -14,9 +14,10 @@ const DEFAULT_PROMPTS = {
   react: false,
   tooling: [],
   installer: "No thanks",
-  nodeVersion: 14,
+  nodeVersion: 16,
 };
 
+// Prep the temp directory each time with fixtures.
 beforeEach(() => {
   fs.ensureDirSync(TMP_DIR);
   fs.copySync(
@@ -24,6 +25,8 @@ beforeEach(() => {
     path.join(TMP_DIR, "package.json")
   );
 });
+
+// Delete the temp directory after each test.
 afterEach(() => {
   if (fs.pathExistsSync(TMP_DIR)) {
     fs.removeSync(TMP_DIR);
@@ -107,8 +110,15 @@ describe("Generator: ESLint", () => {
   });
 });
 
+describe('Generator: GQL codegen', () => {
+  it('should ', async () => {
+
+  });
+});
+
 describe("Generator: misc.", () => {
   it("should write an .nvmrc file with appropriate node version", async () => {
+    // Run generator.
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
@@ -117,6 +127,7 @@ describe("Generator: misc.", () => {
         tooling: ["nvmrc"]
       })
       .withOptions({ force: true });
+    // Read the file.
     const fileStream = fs.createReadStream(path.join(TMP_DIR, ".nvmrc"), {encoding: "utf-8"});
     const rl = readline.createInterface({
       input: fileStream,
