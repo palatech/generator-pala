@@ -1,0 +1,9 @@
+# This codegen.yml is a stub created by generator-pala.
+schema: schema.graphql
+documents:
+  - src/pages/**/*
+generates:
+  ./src/graphql/types.ts:
+    plugins:
+      - typescript
+      - typescript-operations

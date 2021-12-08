@@ -38,7 +38,7 @@ module.exports = class extends Generator {
         name: "tooling",
         message: "Which tooling would you like to use?",
         type: "checkbox",
-        choices: ["eslint", "prettier", "lint-staged", "nvmrc", "svgr"],
+        choices: ["eslint", "prettier", "lint-staged", "nvmrc", "svgr", "gql-codegen"],
       },
       {
         name: "installer",
@@ -106,6 +106,14 @@ module.exports = class extends Generator {
           } : {}
         },
       });
+    }
+
+    if (tooling.includes("gql-codegen")) {
+      this.fs.copyTpl(
+        `${this.templatePath()}/codegen.yml`,
+        `${this.destinationPath()}/codegen.yml`,
+        this.answers
+      )
     }
 
     // Decant the dependencies into the package.json

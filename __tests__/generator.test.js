@@ -3,6 +3,7 @@ const fs = require("fs-extra");
 const helpers = require("yeoman-test");
 const assert = require("yeoman-assert");
 const _ = require("lodash");
+const YAML = require('yaml');
 const readline = require("readline");
 import { ESLINT_STANDARD_DEVDEPS } from "../generators/app/dependencies";
 
@@ -111,8 +112,20 @@ describe("Generator: ESLint", () => {
 });
 
 describe('Generator: GQL codegen', () => {
-  it('should ', async () => {
+  it('should create a stub codegen.yml file', async () => {
+    // Run generator.
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({
+        ...DEFAULT_PROMPTS,
+        tooling: ["gql-codegen"]
+      })
+      .withOptions({ force: true });
+    const yamlString = fs.readFileSync(path.join(TMP_DIR, "codegen.yml"), "utf8")
+    const yamlContents = YAML.parse(yamlString)
 
+    expect(yamlContents.schema).toEqual("schema.graphql")
   });
 });
 

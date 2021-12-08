@@ -18,16 +18,5 @@
   "homepage": "https://github.com/palatech/<%= moduleName %>#readme",
   "scripts": {},
   "dependencies": {},
-  "devDependencies": {},
-  "simple-git-hooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.+(js|jsx|ts|tsx)": [
-      "eslint"
-    ],
-    "*.+(js|jsx|json|yml|yaml|less|scss|ts|tsx|md|graphql|mdx)": [
-      "prettier --write"
-    ]
-  }
+  "devDependencies": {}
 }
