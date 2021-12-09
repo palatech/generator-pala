@@ -38,7 +38,7 @@ module.exports = class extends Generator {
         name: "tooling",
         message: "Which tooling would you like to use?",
         type: "checkbox",
-        choices: ["eslint", "prettier", "lint-staged", "nvmrc", "svgr", "gql-codegen"],
+        choices: ["eslint", "prettier", "git-hooks", "nvmrc", "svgr", "graphql"],
       },
       {
         name: "installer",
@@ -79,7 +79,7 @@ module.exports = class extends Generator {
       );
     }
 
-    if (tooling.includes("lint-staged")) {
+    if (tooling.includes("git-hooks")) {
       newDevDependencies = {
         ...newDevDependencies,
         ...LINTSTAGED_STANDARD_DEVDEPS,
@@ -109,7 +109,7 @@ module.exports = class extends Generator {
       });
     }
 
-    if (tooling.includes("gql-codegen")) {
+    if (tooling.includes("graphql")) {
       this.fs.copyTpl(
         `${this.templatePath()}/codegen.yml`,
         `${this.destinationPath()}/codegen.yml`,

@@ -111,7 +111,25 @@ describe("Generator: ESLint", () => {
   });
 });
 
-describe('Generator: GQL codegen', () => {
+describe('Generator: git hooks', () => {
+  it('should add simple-git-hooks and lint-staged config to package.json', async () => {
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({
+        ...DEFAULT_PROMPTS,
+        tooling: ["git-hooks"],
+      })
+      .withOptions({ force: true });
+    const packageJsonContents = fs.readJsonSync(
+      path.join(TMP_DIR, "package.json")
+    );
+    expect(packageJsonContents["simple-git-hooks"]).toBeDefined();
+    expect(packageJsonContents["lint-staged"]).toBeDefined();
+  });
+});
+
+describe('Generator: graphql', () => {
   it('should create a stub codegen.yml file', async () => {
     // Run generator.
     await helpers
@@ -119,7 +137,7 @@ describe('Generator: GQL codegen', () => {
       .cd(TMP_DIR)
       .withPrompts({
         ...DEFAULT_PROMPTS,
-        tooling: ["gql-codegen"]
+        tooling: ["graphql"]
       })
       .withOptions({ force: true });
     const yamlString = fs.readFileSync(path.join(TMP_DIR, "codegen.yml"), "utf8")
@@ -135,7 +153,7 @@ describe('Generator: GQL codegen', () => {
       .cd(TMP_DIR)
       .withPrompts({
         ...DEFAULT_PROMPTS,
-        tooling: ["gql-codegen"]
+        tooling: ["graphql"]
       })
       .withOptions({ force: true });
 
