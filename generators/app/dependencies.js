@@ -30,3 +30,7 @@ exports.GRAPHQL_CODEGEN_STANDARD_DEVDEPS = {
 exports.GRAPHQL_CODEGEN_STANDARD_DEPS = {
   "graphql": "^16"
 }
+
+exports.SVGR_STANDARD_DEVDEPS = {
+
+}

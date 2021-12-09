@@ -54,6 +54,7 @@ module.exports = class extends Generator {
 
     let newDevDependencies = {};
     let newDependencies = {};
+    let newScripts = {}
 
     if (tooling.includes("eslint")) {
       newDevDependencies = {
@@ -117,12 +118,14 @@ module.exports = class extends Generator {
       )
       newDevDependencies = {...newDevDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEVDEPS}
       newDependencies = {...newDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEPS}
+      newScripts = {...newScripts, "gql-codegen": "graphql-codegen --config codegen.yml"}
     }
 
     // Decant the dependencies into the package.json
     this.fs.extendJSON(`${this.destinationPath()}/package.json`, {
       devDependencies: newDevDependencies,
-      dependencies: newDependencies
+      dependencies: newDependencies,
+      scripts: newScripts
     });
 
     if (tooling.includes("nvmrc")) {

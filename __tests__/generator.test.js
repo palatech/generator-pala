@@ -47,8 +47,8 @@ describe("Generator: general", () => {
       // Change into where we want to run the generator.
       .cd(TMP_DIR)
       // Specify responses to the prompts.
-      .withPrompts({ ...DEFAULT_PROMPTS })
-      .withOptions({ force: true });
+      .withPrompts({...DEFAULT_PROMPTS})
+      .withOptions({force: true});
     // @TODO: NOTES/ Jest array equality requires order to be same.
     const dirContents = await fs.readdir(TMP_DIR);
     expect(dirContents).toEqual(["package.json"]);
@@ -56,12 +56,18 @@ describe("Generator: general", () => {
 });
 
 describe("Generator: ESLint", () => {
-  it("should copy across an .eslintrc when `eslint` checked as tooling", async () => {
+
+  const runGenerator = async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
-      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
-      .withOptions({ force: true });
+      .withPrompts({...DEFAULT_PROMPTS, tooling: ["eslint"]})
+      .withOptions({force: true});
+  }
+
+  it("should copy across an .eslintrc when `eslint` checked as tooling", async () => {
+    await runGenerator();
+
     const dirContents = await fs.readdir(TMP_DIR);
     expect(_.sortBy(dirContents)).toEqual(
       _.sortBy(["package.json", ".eslintrc.js"])
@@ -70,21 +76,15 @@ describe("Generator: ESLint", () => {
 
   it("should overwrite existing .eslintrc file with --force", async () => {
     fs.writeFileSync(path.join(TMP_DIR, ".eslintrc"), "{}");
-    await helpers
-      .run(path.join(__dirname, "..", "generators", "app"))
-      .cd(TMP_DIR)
-      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
-      .withOptions({ force: true });
+    await runGenerator();
+
     const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
     expect(Object.keys(esLintContents).length).toBeTruthy();
   });
 
   it("should only extend the eslint-config-airbnb-typescript/base setup as the default", async () => {
-    await helpers
-      .run(path.join(__dirname, "..", "generators", "app"))
-      .cd(TMP_DIR)
-      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
-      .withOptions({ force: true });
+    await runGenerator();
+
     const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
     expect(Object.keys(esLintContents)).toContain("extends");
     expect(esLintContents.extends).toEqual([
@@ -93,14 +93,8 @@ describe("Generator: ESLint", () => {
   });
 
   it("should add the standard ESLint devDependencies as default", async () => {
-    await helpers
-      .run(path.join(__dirname, "..", "generators", "app"))
-      .cd(TMP_DIR)
-      .withPrompts({
-        ...DEFAULT_PROMPTS,
-        tooling: ["eslint"],
-      })
-      .withOptions({ force: true });
+    await runGenerator();
+
     const packageJsonContents = fs.readJsonSync(
       path.join(TMP_DIR, "package.json")
     );
@@ -120,7 +114,7 @@ describe('Generator: git hooks', () => {
         ...DEFAULT_PROMPTS,
         tooling: ["git-hooks"],
       })
-      .withOptions({ force: true });
+      .withOptions({force: true});
     const packageJsonContents = fs.readJsonSync(
       path.join(TMP_DIR, "package.json")
     );
@@ -130,8 +124,8 @@ describe('Generator: git hooks', () => {
 });
 
 describe('Generator: graphql', () => {
-  it('should create a stub codegen.yml file', async () => {
-    // Run generator.
+
+  const runGenerator = async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
@@ -139,23 +133,30 @@ describe('Generator: graphql', () => {
         ...DEFAULT_PROMPTS,
         tooling: ["graphql"]
       })
-      .withOptions({ force: true });
+      .withOptions({force: true});
+  }
+
+  it('should create a stub codegen.yml file', async () => {
+    await runGenerator();
     const yamlString = fs.readFileSync(path.join(TMP_DIR, "codegen.yml"), "utf8")
     const yamlContents = YAML.parse(yamlString)
 
     expect(yamlContents.schema).toEqual("schema.graphql")
   });
 
+  it('should add a gql codegen script', async () => {
+    await runGenerator();
+
+    const packageJsonContents = fs.readJsonSync(
+      path.join(TMP_DIR, "package.json")
+    );
+
+    expect(packageJsonContents.scripts["gql-codegen"]).toBeDefined();
+
+  });
+
   it('should add graphql to the existing dependencies', async () => {
-    // Run generator.
-    await helpers
-      .run(path.join(__dirname, "..", "generators", "app"))
-      .cd(TMP_DIR)
-      .withPrompts({
-        ...DEFAULT_PROMPTS,
-        tooling: ["graphql"]
-      })
-      .withOptions({ force: true });
+    await runGenerator();
 
     const packageJsonContents = fs.readJsonSync(
       path.join(TMP_DIR, "package.json")
@@ -177,7 +178,7 @@ describe("Generator: misc.", () => {
         ...DEFAULT_PROMPTS,
         tooling: ["nvmrc"]
       })
-      .withOptions({ force: true });
+      .withOptions({force: true});
     // Read the file.
     const fileStream = fs.createReadStream(path.join(TMP_DIR, ".nvmrc"), {encoding: "utf-8"});
     const rl = readline.createInterface({
