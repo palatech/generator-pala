@@ -3,9 +3,12 @@ const fs = require("fs-extra");
 const helpers = require("yeoman-test");
 const assert = require("yeoman-assert");
 const _ = require("lodash");
-const YAML = require('yaml');
+const YAML = require("yaml");
 const readline = require("readline");
-import {ESLINT_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEPS} from "../generators/app/dependencies";
+import {
+  ESLINT_STANDARD_DEVDEPS,
+  GRAPHQL_CODEGEN_STANDARD_DEPS,
+} from "../generators/app/dependencies";
 
 const TMP_DIR = path.join(__dirname, "tmp");
 
@@ -47,8 +50,8 @@ describe("Generator: general", () => {
       // Change into where we want to run the generator.
       .cd(TMP_DIR)
       // Specify responses to the prompts.
-      .withPrompts({...DEFAULT_PROMPTS})
-      .withOptions({force: true});
+      .withPrompts({ ...DEFAULT_PROMPTS })
+      .withOptions({ force: true });
     // @TODO: NOTES/ Jest array equality requires order to be same.
     const dirContents = await fs.readdir(TMP_DIR);
     expect(dirContents).toEqual(["package.json"]);
@@ -56,14 +59,13 @@ describe("Generator: general", () => {
 });
 
 describe("Generator: ESLint", () => {
-
   const runGenerator = async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
-      .withPrompts({...DEFAULT_PROMPTS, tooling: ["eslint"]})
-      .withOptions({force: true});
-  }
+      .withPrompts({ ...DEFAULT_PROMPTS, tooling: ["eslint"] })
+      .withOptions({ force: true });
+  };
 
   it("should copy across an .eslintrc when `eslint` checked as tooling", async () => {
     await runGenerator();
@@ -88,7 +90,8 @@ describe("Generator: ESLint", () => {
     const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
     expect(Object.keys(esLintContents)).toContain("extends");
     expect(esLintContents.extends).toEqual([
-      "eslint-config-airbnb-typescript/base", "plugin:@typescript-eslint/recommended"
+      "eslint-config-airbnb-typescript/base",
+      "plugin:@typescript-eslint/recommended",
     ]);
   });
 
@@ -105,8 +108,8 @@ describe("Generator: ESLint", () => {
   });
 });
 
-describe('Generator: git hooks', () => {
-  it('should add simple-git-hooks and lint-staged config to package.json', async () => {
+describe("Generator: git hooks", () => {
+  it("should add simple-git-hooks and lint-staged config to package.json", async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
@@ -114,7 +117,7 @@ describe('Generator: git hooks', () => {
         ...DEFAULT_PROMPTS,
         tooling: ["git-hooks"],
       })
-      .withOptions({force: true});
+      .withOptions({ force: true });
     const packageJsonContents = fs.readJsonSync(
       path.join(TMP_DIR, "package.json")
     );
@@ -123,28 +126,30 @@ describe('Generator: git hooks', () => {
   });
 });
 
-describe('Generator: graphql', () => {
-
+describe("Generator: graphql", () => {
   const runGenerator = async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
       .withPrompts({
         ...DEFAULT_PROMPTS,
-        tooling: ["graphql"]
+        tooling: ["graphql"],
       })
-      .withOptions({force: true});
-  }
+      .withOptions({ force: true });
+  };
 
-  it('should create a stub codegen.yml file', async () => {
+  it("should create a stub codegen.yml file", async () => {
     await runGenerator();
-    const yamlString = fs.readFileSync(path.join(TMP_DIR, "codegen.yml"), "utf8")
-    const yamlContents = YAML.parse(yamlString)
+    const yamlString = fs.readFileSync(
+      path.join(TMP_DIR, "codegen.yml"),
+      "utf8"
+    );
+    const yamlContents = YAML.parse(yamlString);
 
-    expect(yamlContents.schema).toBeDefined()
+    expect(yamlContents.schema).toBeDefined();
   });
 
-  it('should add a gql codegen script', async () => {
+  it("should add a gql codegen script", async () => {
     await runGenerator();
 
     const packageJsonContents = fs.readJsonSync(
@@ -152,10 +157,9 @@ describe('Generator: graphql', () => {
     );
 
     expect(packageJsonContents.scripts["gql-codegen"]).toBeDefined();
-
   });
 
-  it('should add graphql to the existing dependencies', async () => {
+  it("should add graphql to the existing dependencies", async () => {
     await runGenerator();
 
     const packageJsonContents = fs.readJsonSync(
@@ -163,31 +167,30 @@ describe('Generator: graphql', () => {
     );
     expect(packageJsonContents.dependencies).toEqual({
       ...GRAPHQL_CODEGEN_STANDARD_DEPS,
-      "cowsay": "^1.4.0",
+      cowsay: "^1.4.0",
     });
   });
 });
 
-describe('Generator: SVGR', () => {
-
+describe("Generator: SVGR", () => {
   const runGenerator = async () => {
     await helpers
       .run(path.join(__dirname, "..", "generators", "app"))
       .cd(TMP_DIR)
       .withPrompts({
         ...DEFAULT_PROMPTS,
-        tooling: ["svgr"]
+        tooling: ["svgr"],
       })
-      .withOptions({force: true});
-  }
+      .withOptions({ force: true });
+  };
 
-  it('should add an .svgo.yml config', async () => {
+  it("should add an .svgo.yml config", async () => {
     await runGenerator();
 
-    const yamlString = fs.readFileSync(path.join(TMP_DIR, ".svgo.yml"), "utf8")
-    const yamlContents = YAML.parse(yamlString)
+    const yamlString = fs.readFileSync(path.join(TMP_DIR, ".svgo.yml"), "utf8");
+    const yamlContents = YAML.parse(yamlString);
 
-    expect(yamlContents.plugins).toBeDefined()
+    expect(yamlContents.plugins).toBeDefined();
   });
 });
 
@@ -199,21 +202,23 @@ describe("Generator: misc.", () => {
       .cd(TMP_DIR)
       .withPrompts({
         ...DEFAULT_PROMPTS,
-        tooling: ["nvmrc"]
+        tooling: ["nvmrc"],
       })
-      .withOptions({force: true});
+      .withOptions({ force: true });
     // Read the file.
-    const fileStream = fs.createReadStream(path.join(TMP_DIR, ".nvmrc"), {encoding: "utf-8"});
+    const fileStream = fs.createReadStream(path.join(TMP_DIR, ".nvmrc"), {
+      encoding: "utf-8",
+    });
     const rl = readline.createInterface({
       input: fileStream,
-      crlfDelay: Infinity
+      crlfDelay: Infinity,
     });
     let line1;
     for await (const line of rl) {
       line1 = line;
-      break
+      break;
     }
-    expect(parseInt(line1)).toBeLessThan(20)
-    expect(parseInt(line1)).toBeGreaterThanOrEqual(10)
+    expect(parseInt(line1)).toBeLessThan(20);
+    expect(parseInt(line1)).toBeGreaterThanOrEqual(10);
   });
 });

@@ -4,7 +4,10 @@ const Generator = require("yeoman-generator");
 const {
   PRETTIER_STANDARD_DEVDEPS,
   ESLINT_STANDARD_DEVDEPS,
-  LINTSTAGED_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEPS, SVGR_STANDARD_DEVDEPS,
+  LINTSTAGED_STANDARD_DEVDEPS,
+  GRAPHQL_CODEGEN_STANDARD_DEVDEPS,
+  GRAPHQL_CODEGEN_STANDARD_DEPS,
+  SVGR_STANDARD_DEVDEPS,
 } = require("./dependencies");
 
 function getPrettierDevDeps(framework) {
@@ -38,7 +41,14 @@ module.exports = class extends Generator {
         name: "tooling",
         message: "Which tooling would you like to use?",
         type: "checkbox",
-        choices: ["eslint", "prettier", "git-hooks", "nvmrc", "svgr", "graphql"],
+        choices: [
+          "eslint",
+          "prettier",
+          "git-hooks",
+          "nvmrc",
+          "svgr",
+          "graphql",
+        ],
       },
       {
         name: "installer",
@@ -50,11 +60,11 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    const {framework, tooling} = this.answers;
+    const { framework, tooling } = this.answers;
 
     let newDevDependencies = {};
     let newDependencies = {};
-    let newScripts = {}
+    let newScripts = {};
 
     if (tooling.includes("eslint")) {
       newDevDependencies = {
@@ -95,17 +105,18 @@ module.exports = class extends Generator {
           "pre-commit": "npx lint-staged",
         },
         "lint-staged": {
-          ...tooling.includes("eslint") ? {
-            "*.+(js|jsx|ts|tsx)":
-              [
-                "eslint"
-              ]
-          } : {},
-          ...tooling.includes("eslint") ? {
-            "*.+(js|jsx|json|yml|yaml|less|scss|ts|tsx|md|graphql|mdx)": [
-              "prettier --write"
-            ]
-          } : {}
+          ...(tooling.includes("eslint")
+            ? {
+                "*.+(js|jsx|ts|tsx)": ["eslint"],
+              }
+            : {}),
+          ...(tooling.includes("eslint")
+            ? {
+                "*.+(js|jsx|json|yml|yaml|less|scss|ts|tsx|md|graphql|mdx)": [
+                  "prettier --write",
+                ],
+              }
+            : {}),
         },
       });
     }
@@ -115,10 +126,19 @@ module.exports = class extends Generator {
         `${this.templatePath()}/codegen.yml`,
         `${this.destinationPath()}/codegen.yml`,
         this.answers
-      )
-      newDevDependencies = {...newDevDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEVDEPS}
-      newDependencies = {...newDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEPS}
-      newScripts = {...newScripts, "gql-codegen": "graphql-codegen --config codegen.yml"}
+      );
+      newDevDependencies = {
+        ...newDevDependencies,
+        ...GRAPHQL_CODEGEN_STANDARD_DEVDEPS,
+      };
+      newDependencies = {
+        ...newDependencies,
+        ...GRAPHQL_CODEGEN_STANDARD_DEPS,
+      };
+      newScripts = {
+        ...newScripts,
+        "gql-codegen": "graphql-codegen --config codegen.yml",
+      };
     }
 
     if (tooling.includes("svgr")) {
@@ -126,23 +146,27 @@ module.exports = class extends Generator {
         `${this.templatePath()}/svgo.yml`,
         `${this.destinationPath()}/.svgo.yml`,
         this.answers
-      )
-      newDevDependencies = {...newDevDependencies, ...SVGR_STANDARD_DEVDEPS}
+      );
+      newDevDependencies = { ...newDevDependencies, ...SVGR_STANDARD_DEVDEPS };
       newScripts = {
         ...newScripts,
-        "svg-gen": "svgr --native --out-dir src/assets/images/converted --replace-attr-values \"#FFF={props.colour}\" --replace-attr-values \"#fff={props.colour}\" --ext tsx src/assets/images"
-      }
+        "svg-gen":
+          'svgr --native --out-dir src/assets/images/converted --replace-attr-values "#FFF={props.colour}" --replace-attr-values "#fff={props.colour}" --ext tsx src/assets/images',
+      };
     }
 
     // Decant the dependencies into the package.json
     this.fs.extendJSON(`${this.destinationPath()}/package.json`, {
       devDependencies: newDevDependencies,
       dependencies: newDependencies,
-      scripts: newScripts
+      scripts: newScripts,
     });
 
     if (tooling.includes("nvmrc")) {
-      this.fs.write(`${this.destinationPath()}/.nvmrc`, `${process.version.split('.')[0].slice(1)}\n`)
+      this.fs.write(
+        `${this.destinationPath()}/.nvmrc`,
+        `${process.version.split(".")[0].slice(1)}\n`
+      );
     }
   }
 
