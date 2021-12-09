@@ -82,13 +82,13 @@ describe("Generator: ESLint", () => {
     expect(Object.keys(esLintContents).length).toBeTruthy();
   });
 
-  it("should only extend the eslint-config-airbnb-typescript/base setup as the default", async () => {
+  it("should only extend the eslint-config-airbnb-typescript/base and rec setup as the default", async () => {
     await runGenerator();
 
     const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
     expect(Object.keys(esLintContents)).toContain("extends");
     expect(esLintContents.extends).toEqual([
-      "eslint-config-airbnb-typescript/base",
+      "eslint-config-airbnb-typescript/base", "plugin:@typescript-eslint/recommended"
     ]);
   });
 
@@ -141,7 +141,7 @@ describe('Generator: graphql', () => {
     const yamlString = fs.readFileSync(path.join(TMP_DIR, "codegen.yml"), "utf8")
     const yamlContents = YAML.parse(yamlString)
 
-    expect(yamlContents.schema).toEqual("schema.graphql")
+    expect(yamlContents.schema).toBeDefined()
   });
 
   it('should add a gql codegen script', async () => {
@@ -165,6 +165,29 @@ describe('Generator: graphql', () => {
       ...GRAPHQL_CODEGEN_STANDARD_DEPS,
       "cowsay": "^1.4.0",
     });
+  });
+});
+
+describe('Generator: SVGR', () => {
+
+  const runGenerator = async () => {
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({
+        ...DEFAULT_PROMPTS,
+        tooling: ["svgr"]
+      })
+      .withOptions({force: true});
+  }
+
+  it('should add an .svgo.yml config', async () => {
+    await runGenerator();
+
+    const yamlString = fs.readFileSync(path.join(TMP_DIR, ".svgo.yml"), "utf8")
+    const yamlContents = YAML.parse(yamlString)
+
+    expect(yamlContents.plugins).toBeDefined()
   });
 });
 

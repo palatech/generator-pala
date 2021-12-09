@@ -4,7 +4,7 @@ const Generator = require("yeoman-generator");
 const {
   PRETTIER_STANDARD_DEVDEPS,
   ESLINT_STANDARD_DEVDEPS,
-  LINTSTAGED_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEPS,
+  LINTSTAGED_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEPS, SVGR_STANDARD_DEVDEPS,
 } = require("./dependencies");
 
 function getPrettierDevDeps(framework) {
@@ -119,6 +119,19 @@ module.exports = class extends Generator {
       newDevDependencies = {...newDevDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEVDEPS}
       newDependencies = {...newDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEPS}
       newScripts = {...newScripts, "gql-codegen": "graphql-codegen --config codegen.yml"}
+    }
+
+    if (tooling.includes("svgr")) {
+      this.fs.copyTpl(
+        `${this.templatePath()}/svgo.yml`,
+        `${this.destinationPath()}/.svgo.yml`,
+        this.answers
+      )
+      newDevDependencies = {...newDevDependencies, ...SVGR_STANDARD_DEVDEPS}
+      newScripts = {
+        ...newScripts,
+        "svg-gen": "svgr --native --out-dir src/assets/images/converted --replace-attr-values \"#FFF={props.colour}\" --replace-attr-values \"#fff={props.colour}\" --ext tsx src/assets/images"
+      }
     }
 
     // Decant the dependencies into the package.json

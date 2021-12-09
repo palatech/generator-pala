@@ -24,7 +24,8 @@ exports.LINTSTAGED_STANDARD_DEVDEPS = {
 exports.GRAPHQL_CODEGEN_STANDARD_DEVDEPS = {
   "@graphql-codegen/cli": "^2",
   "@graphql-codegen/typescript": "^2",
-  "@graphql-codegen/typescript-operations": "^2"
+  "@graphql-codegen/typescript-operations": "^2",
+  "@graphql-codegen/typescript-react-apollo": "^3"
 }
 
 exports.GRAPHQL_CODEGEN_STANDARD_DEPS = {
@@ -32,5 +33,5 @@ exports.GRAPHQL_CODEGEN_STANDARD_DEPS = {
 }
 
 exports.SVGR_STANDARD_DEVDEPS = {
-
+  "@svgr/cli": "^6"
 }
