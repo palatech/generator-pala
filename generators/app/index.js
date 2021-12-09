@@ -4,7 +4,7 @@ const Generator = require("yeoman-generator");
 const {
   PRETTIER_STANDARD_DEVDEPS,
   ESLINT_STANDARD_DEVDEPS,
-  LINTSTAGED_STANDARD_DEVDEPS,
+  LINTSTAGED_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEPS,
 } = require("./dependencies");
 
 function getPrettierDevDeps(framework) {
@@ -53,6 +53,7 @@ module.exports = class extends Generator {
     const {framework, tooling} = this.answers;
 
     let newDevDependencies = {};
+    let newDependencies = {};
 
     if (tooling.includes("eslint")) {
       newDevDependencies = {
@@ -114,11 +115,14 @@ module.exports = class extends Generator {
         `${this.destinationPath()}/codegen.yml`,
         this.answers
       )
+      newDevDependencies = {...newDevDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEVDEPS}
+      newDependencies = {...newDependencies, ...GRAPHQL_CODEGEN_STANDARD_DEPS}
     }
 
     // Decant the dependencies into the package.json
     this.fs.extendJSON(`${this.destinationPath()}/package.json`, {
       devDependencies: newDevDependencies,
+      dependencies: newDependencies
     });
 
     if (tooling.includes("nvmrc")) {

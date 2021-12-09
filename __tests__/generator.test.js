@@ -5,7 +5,7 @@ const assert = require("yeoman-assert");
 const _ = require("lodash");
 const YAML = require('yaml');
 const readline = require("readline");
-import { ESLINT_STANDARD_DEVDEPS } from "../generators/app/dependencies";
+import {ESLINT_STANDARD_DEVDEPS, GRAPHQL_CODEGEN_STANDARD_DEPS} from "../generators/app/dependencies";
 
 const TMP_DIR = path.join(__dirname, "tmp");
 
@@ -126,6 +126,26 @@ describe('Generator: GQL codegen', () => {
     const yamlContents = YAML.parse(yamlString)
 
     expect(yamlContents.schema).toEqual("schema.graphql")
+  });
+
+  it('should add graphql to the existing dependencies', async () => {
+    // Run generator.
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({
+        ...DEFAULT_PROMPTS,
+        tooling: ["gql-codegen"]
+      })
+      .withOptions({ force: true });
+
+    const packageJsonContents = fs.readJsonSync(
+      path.join(TMP_DIR, "package.json")
+    );
+    expect(packageJsonContents.dependencies).toEqual({
+      ...GRAPHQL_CODEGEN_STANDARD_DEPS,
+      "cowsay": "^1.4.0",
+    });
   });
 });
 
