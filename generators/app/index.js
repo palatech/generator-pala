@@ -50,12 +50,6 @@ module.exports = class extends Generator {
           "graphql",
         ],
       },
-      {
-        name: "installer",
-        message: "Which package manager do you want for installation?",
-        type: "list",
-        choices: ["npm", "yarn", "No thanks"],
-      },
     ]);
   }
 
@@ -170,11 +164,4 @@ module.exports = class extends Generator {
     }
   }
 
-  install() {
-    if (this.answers.packageManager === "npm") {
-      this.npmInstall();
-    } else if (this.answers.packageManager === "yarn") {
-      this.yarnInstall();
-    }
-  }
 };

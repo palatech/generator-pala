@@ -17,8 +17,6 @@ const DEFAULT_PROMPTS = {
   framework: "none",
   react: false,
   tooling: [],
-  installer: "No thanks",
-  nodeVersion: 16,
 };
 
 // Prep the temp directory each time with fixtures.
