@@ -192,6 +192,27 @@ describe("Generator: SVGR", () => {
   });
 });
 
+describe('Generator: pnpm monorepo', () => {
+  const runGenerator = async () => {
+    await helpers
+      .run(path.join(__dirname, "..", "generators", "app"))
+      .cd(TMP_DIR)
+      .withPrompts({
+        ...DEFAULT_PROMPTS,
+        tooling: ["pnpm monorepo root"],
+      })
+      .withOptions({ force: true });
+  };
+
+  it('should copy across a .pnpm-workspace.yaml', async () => {
+    await runGenerator();
+
+    const dirContents = await fs.readdir(TMP_DIR);
+    // @TODO: NOTES/ toContain must be exact (extra elements will fail it).
+    expect(dirContents.some(x => x === ".pnpm-workspace.yaml")).toBeTruthy();
+  });
+});
+
 describe("Generator: misc.", () => {
   it("should write an .nvmrc file with appropriate node version", async () => {
     // Run generator.

@@ -48,6 +48,7 @@ module.exports = class extends Generator {
           "nvmrc",
           "svgr",
           "graphql",
+          "pnpm monorepo root"
         ],
       },
     ]);
@@ -147,6 +148,14 @@ module.exports = class extends Generator {
         "svg-gen":
           'svgr --native --out-dir src/assets/images/converted --replace-attr-values "#FFF={props.colour}" --replace-attr-values "#fff={props.colour}" --ext tsx src/assets/images',
       };
+    }
+
+    if (tooling.includes("pnpm monorepo root")) {
+      this.fs.copyTpl(
+        `${this.templatePath()}/_pnpm-workspace.yaml`,
+        `${this.destinationPath()}/.pnpm-workspace.yaml`,
+        this.answers
+      );
     }
 
     // Decant the dependencies into the package.json
