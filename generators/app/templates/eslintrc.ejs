@@ -1,6 +1,6 @@
 module.exports = {
 // Don't need to also extend "prettier/react" as of `eslint-config-prettier` v8.
-extends: ['eslint-config-airbnb-typescript<% if (!react) { %>/base<% } %>'<% if (react) { %>, 'airbnb/hooks'<% } %> <% if (tooling.includes("prettier")) { %>, 'prettier'<% } %>, 'plugin:@typescript-eslint/recommended'],
+extends: ['airbnb-typescript<% if (!react) { %>/base<% } %>'<% if (react) { %>, 'airbnb/hooks'<% } %> <% if (tooling.includes("prettier")) { %>, 'prettier'<% } %>, 'plugin:@typescript-eslint/recommended'],
 parserOptions: {
 // Need to point the AirbnbTS ESLint config to the tsconfig.
 project: './tsconfig.json',
@@ -14,6 +14,8 @@ rules: {
 'react/prop-types': 'off',
 // Named exports are fine.
 'import/prefer-default-export': 'off',
+// Markup escaping set to not error.
+'react/no-unescaped-entities': 'warn',
 // Nested ternaries shouldn't be forbidden.
 'no-nested-ternary': 'warn',
 // TSC should protect against consistent returns.
@@ -28,9 +30,6 @@ rules: {
 "settings": {
 "react": {
 "version": "detect"
-},
-"import/resolver": {
-"babel-module": {}
 },
 },
 };

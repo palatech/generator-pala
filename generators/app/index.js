@@ -27,6 +27,12 @@ module.exports = class extends Generator {
         default: this.appname.replace(/\s/g, "-"),
       },
       {
+        name: "basics",
+        message: "Do you need any of these basics?",
+        type: "checkbox",
+        choices: ["readme", "license", "package.json", "catchall gitignore"],
+      },
+      {
         name: "react",
         message: "Does this project use React?",
         type: "confirm",
@@ -35,7 +41,7 @@ module.exports = class extends Generator {
         name: "framework",
         message: "Which framework are you using?",
         type: "list",
-        choices: ["none", "gatsby"],
+        choices: ["none", "nextjs"],
       },
       {
         name: "tooling",
@@ -48,7 +54,7 @@ module.exports = class extends Generator {
           "nvmrc",
           "svgr",
           "graphql",
-          "pnpm monorepo root"
+          "pnpm monorepo root",
         ],
       },
     ]);
@@ -69,6 +75,11 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         `${this.templatePath()}/eslintrc.ejs`,
         `${this.destinationPath()}/.eslintrc.js`,
+        this.answers
+      );
+      this.fs.copyTpl(
+        `${this.templatePath()}/eslintignore`,
+        `${this.destinationPath()}/.eslintignore`,
         this.answers
       );
     }
@@ -172,5 +183,4 @@ module.exports = class extends Generator {
       );
     }
   }
-
 };

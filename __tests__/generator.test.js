@@ -14,6 +14,7 @@ const TMP_DIR = path.join(__dirname, "tmp");
 
 const DEFAULT_PROMPTS = {
   moduleName: "Project",
+  basics: [],
   framework: "none",
   react: false,
   tooling: [],
@@ -69,9 +70,7 @@ describe("Generator: ESLint", () => {
     await runGenerator();
 
     const dirContents = await fs.readdir(TMP_DIR);
-    expect(_.sortBy(dirContents)).toEqual(
-      _.sortBy(["package.json", ".eslintrc.js"])
-    );
+    expect(dirContents.some(x => x === ".eslintrc.js")).toBeTruthy();
   });
 
   it("should overwrite existing .eslintrc file with --force", async () => {
@@ -88,7 +87,7 @@ describe("Generator: ESLint", () => {
     const esLintContents = require(path.join(TMP_DIR, ".eslintrc.js"));
     expect(Object.keys(esLintContents)).toContain("extends");
     expect(esLintContents.extends).toEqual([
-      "eslint-config-airbnb-typescript/base",
+      "airbnb-typescript/base",
       "plugin:@typescript-eslint/recommended",
     ]);
   });
@@ -103,6 +102,12 @@ describe("Generator: ESLint", () => {
       ...ESLINT_STANDARD_DEVDEPS,
       "left-pad": "^1.3.0",
     });
+  });
+
+  it('should create an .eslintignore', async () => {
+    await runGenerator();
+
+    const eslintignoreExists = await fs.access(path.join(TMP_DIR, '.eslintignore'))
   });
 });
 
