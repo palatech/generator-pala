@@ -164,7 +164,7 @@ module.exports = class extends Generator {
     if (tooling.includes("pnpm monorepo root")) {
       this.fs.copyTpl(
         `${this.templatePath()}/_pnpm-workspace.yaml`,
-        `${this.destinationPath()}/.pnpm-workspace.yaml`,
+        `${this.destinationPath()}/pnpm-workspace.yaml`,
         this.answers
       );
     }

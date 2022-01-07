@@ -209,12 +209,12 @@ describe('Generator: pnpm monorepo', () => {
       .withOptions({ force: true });
   };
 
-  it('should copy across a .pnpm-workspace.yaml', async () => {
+  it('should copy across a pnpm-workspace.yaml', async () => {
     await runGenerator();
 
     const dirContents = await fs.readdir(TMP_DIR);
     // @TODO: NOTES/ toContain must be exact (extra elements will fail it).
-    expect(dirContents.some(x => x === ".pnpm-workspace.yaml")).toBeTruthy();
+    expect(dirContents.some(x => x === "pnpm-workspace.yaml")).toBeTruthy();
   });
 });
 
