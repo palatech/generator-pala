@@ -1,10 +1,11 @@
 module.exports = {
 // Don't need to also extend "prettier/react" as of `eslint-config-prettier` v8.
-extends: ['airbnb-typescript<% if (!react) { %>/base<% } %>'<% if (react) { %>, 'airbnb/hooks'<% } %> <% if (tooling.includes("prettier")) { %>, 'prettier'<% } %>, 'plugin:@typescript-eslint/recommended'],
+extends: [<% if (react) { %>'plugin:react/recommended',<% } %> 'airbnb-typescript<% if (!react) { %>/base<% } %>'<% if (react) { %>, 'airbnb/hooks'<% } %> <% if (tooling.includes("prettier")) { %>, 'prettier'<% } %>, 'plugin:@typescript-eslint/recommended'],
 parserOptions: {
 // Need to point the AirbnbTS ESLint config to the tsconfig.
 project: './tsconfig.json',
 },
+plugins: ["import"],
 rules: {
 // Next.js makes a React import unnecessary.
 'react/react-in-jsx-scope': 'off',

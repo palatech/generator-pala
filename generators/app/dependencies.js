@@ -5,6 +5,7 @@ exports.PRETTIER_STANDARD_DEVDEPS = {
 exports.ESLINT_STANDARD_DEVDEPS = {
   eslint: "^8",
   "eslint-config-airbnb-typescript": "^16",
+  "eslint-config-airbnb": "^19",
   "eslint-config-prettier": "^8",
   "eslint-import-resolver-babel-module": "^5",
   "eslint-plugin-import": "^2",
